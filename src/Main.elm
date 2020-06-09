@@ -1,37 +1,57 @@
 module Main exposing (..)
 
-import Element exposing (Element, column, el, height, padding, px, rgb255, row, spacing, width)
+import Element exposing (Element, height, px, rgb255, text, width)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
-import List
 
 
 main =
     Element.layout
         []
-        (createGrid 7 12)
+        createTitleRow
 
 
-createGrid : Int -> Int -> Element msg
-createGrid n_cols n_rows =
-    row
-        [ spacing 1 ]
-        (List.repeat n_cols (createColumn n_rows))
+daysOfWeek : List String
+daysOfWeek =
+    [ "Sunday"
+    , "Monday"
+    , "Tuesday"
+    , "Wednesday"
+    , "Thursday"
+    , "Friday"
+    , "Saturday"
+    ]
 
 
-createColumn : Int -> Element msg
-createColumn n_rows =
-    column
-        [ spacing 1 ]
-        (List.repeat n_rows createBox)
+createTitleRow : Element msg
+createTitleRow =
+    Element.row
+        []
+        (List.map
+            (\x -> createBox x)
+            daysOfWeek
+        )
 
 
-createBox : Element msg
-createBox =
-    el
-        [ Background.color (rgb255 60 208 112)
-        , width (px 100)
+
+-- createRow : Element msg
+-- createRow =
+--     Element.row
+--         []
+--         (List.repeat 7 createBox)
+
+
+createBox : String -> Element msg
+createBox boxText =
+    Element.el
+        [ width (px 100)
         , height (px 37)
+        , Background.color (rgb255 255 255 255)
+        , Border.color (rgb255 20 20 20)
+        , Border.width 1
+        , Font.color (rgb255 0 0 0)
+        , Font.center
+        , Font.size 16
         ]
-        Element.none
+        (text boxText)
