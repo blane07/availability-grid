@@ -1,17 +1,59 @@
 module Main exposing (..)
 
+import Browser
 import Element exposing (Element, height, px, rgb255, text, width)
 import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
+import Html exposing (Html, div)
+import Html.Events exposing (onClick)
 import List exposing (map, range)
 import String exposing (fromInt)
 
 
+
+-- MAIN
+
+
 main =
-    Element.layout
-        []
-        createGrid
+    Browser.sandbox
+        { init = init
+        , update = update
+        , view = view
+        }
+
+
+
+-- MODEL
+
+
+type alias Model =
+    String
+
+
+init : Model
+init =
+    ""
+
+
+
+-- UPDATE
+
+
+type CellType
+    = HeaderCell
+    | TimeCell
+
+
+type Msg
+    = Day String
+    | Time String
+    | CellStatus
+
+
+update : Msg -> Model -> Model
+update msg model =
+    ""
 
 
 days : List String
@@ -48,9 +90,14 @@ times =
     ]
 
 
-type BoxType
-    = Header
-    | Time
+
+-- VIEW
+
+
+view : Model -> Html Msg
+view model =
+    div []
+        [ Element.layout [] createGrid ]
 
 
 createGrid : Element msg
@@ -63,44 +110,54 @@ createGrid =
 createDayColumn : String -> Element msg
 createDayColumn day =
     let
-        dayBox =
-            [ createBox Header day ]
+        dayCell =
+            [ createCell HeaderCell day ]
 
-        timeBoxes =
-            map (\x -> createBox Time x) times
+        timeCells =
+            map (\x -> createCell TimeCell x) times
     in
     Element.column
         []
-        (dayBox ++ timeBoxes)
+        (dayCell ++ timeCells)
 
 
-createBox : BoxType -> String -> Element msg
-createBox boxType boxText =
+createCell : CellType -> String -> Element msg
+createCell boxType boxText =
     case boxType of
-        Header ->
-            Element.el
-                [ width (px 100)
-                , height (px 37)
-                , Background.color (rgb255 0 0 0)
-                , Border.color (rgb255 180 180 180)
-                , Border.width 1
-                , Font.color (rgb255 255 255 255)
-                , Font.center
-                , Font.size 16
-                ]
-                (text boxText)
+        HeaderCell ->
+            createHeaderCell boxText
 
-        Time ->
-            Element.el
-                [ width (px 100)
-                , height (px 37)
-                , Background.color (rgb255 255 255 255)
-                , Border.color (rgb255 180 180 180)
-                , Border.width 1
-                , Font.color (rgb255 0 0 0)
-                , Font.center
-                , Font.size 14
-                , Element.mouseOver
-                    [ Background.color (rgb255 60 208 112) ]
-                ]
-                (text boxText)
+        TimeCell ->
+            createTimeCell boxText
+
+
+createHeaderCell : String -> Element msg
+createHeaderCell boxText =
+    Element.el
+        [ width (px 100)
+        , height (px 37)
+        , Background.color (rgb255 0 0 0)
+        , Border.color (rgb255 180 180 180)
+        , Border.width 1
+        , Font.color (rgb255 255 255 255)
+        , Font.center
+        , Font.size 16
+        ]
+        (text boxText)
+
+
+createTimeCell : String -> Element msg
+createTimeCell boxText =
+    Element.el
+        [ width (px 100)
+        , height (px 37)
+        , Background.color (rgb255 255 255 255)
+        , Border.color (rgb255 180 180 180)
+        , Border.width 1
+        , Font.color (rgb255 0 0 0)
+        , Font.center
+        , Font.size 14
+        , Element.mouseOver
+            [ Background.color (rgb255 60 208 112) ]
+        ]
+        (text boxText)
